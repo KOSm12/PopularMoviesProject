@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 public class PlaceholderFragment extends Fragment {
 
@@ -15,7 +16,15 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        GridView listMovies = (GridView) view.findViewById(R.id.gridView);
+        listMovies.setAdapter(new ImageAdapter(getActivity()));
+
+        FetchMovieTask movieTask = new FetchMovieTask();
+        movieTask.execute();
+
+        return view;
     }
 
 }
