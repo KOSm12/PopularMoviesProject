@@ -15,9 +15,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
+    private final List<String> urls = new ArrayList<String>();
+    static final String BASE = "http://image.tmdb.org/t/p/w185/";
+    static final String EXT = ".jpg";
+
+    public List<String> getUrls(){
+        return urls;
+    }
 
     private String[] getMoviesFromJson(String moviesDbDiscover) throws JSONException{
         // These are the names of the JSON objects that need to be extracted.
@@ -46,7 +55,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
             title = singleMovie.getString(OWM_TITLE);
             average = singleMovie.getString(OWM_AVERAGE);
 
-            resultStr[i] = poster + overview + date + title + average;
+            resultStr[i] = poster;
         }
         return resultStr;
     }
@@ -118,5 +127,15 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String[] results) {
+        if (null == results){
+            for (String result: results
+                 ) {
+                urls.add(BASE + result + EXT);
+            }
+        }
     }
 }

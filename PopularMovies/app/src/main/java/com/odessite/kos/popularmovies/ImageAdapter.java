@@ -1,6 +1,7 @@
 package com.odessite.kos.popularmovies;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,20 +10,18 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ImageAdapter extends BaseAdapter{
     private Context mContext;
-    private final List<String> urls = new ArrayList<String>();
+    private final List<String> urls;
+    public static final String LOG_TAG = ImageAdapter.class.getSimpleName();
 
 
-    public ImageAdapter(Context context) {
+
+    public ImageAdapter(Context context, List<String> links) {
         mContext = context;
-
-        // Ensure we get a different ordering of images on each run.
-        Collections.addAll(urls, Data.URLS);
+        urls = links;
     }
 
     @Override
@@ -52,6 +51,7 @@ public class ImageAdapter extends BaseAdapter{
             imageView = (ImageView) convertView;
         }
         String url = (String) getItem(position);
+        Log.v(LOG_TAG, "The image " + url);
         Picasso.with(mContext).load(url).into(imageView);
         return imageView;
     }

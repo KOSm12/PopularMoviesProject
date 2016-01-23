@@ -21,6 +21,8 @@ public class PlaceholderFragment extends Fragment {
         GridView listMovies = (GridView) view.findViewById(R.id.gridView);
         listMovies.setAdapter(new ImageAdapter(getActivity()));
 
+
+
         return view;
     }
 
