@@ -1,5 +1,6 @@
 package com.odessite.kos.popularmovies;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,11 +12,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class FetchMovieTask extends AsyncTask<Void, Void, Void> {
+public class FetchMovieTask extends AsyncTask<String, Void, Void> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected Void doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -23,9 +24,16 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Void> {
 
         try {
             // Construct the URL for the themoviedb query
-            String baseUrl = "https://api.themoviedb.org/3/discover/movie?";
-            String apiKey = "api_key=" + BuildConfig.THEMOVIEDB_API_KEY;
-            URL url = new URL(baseUrl.concat(apiKey));
+            final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
+            final String SORT_PARAM = "sort_by";
+            final String APPID_PARAM = "api_key";
+
+            Uri buildUrl = Uri.parse(BASE_URL).buildUpon()
+                    .appendQueryParameter(SORT_PARAM, params[0])
+                    .appendQueryParameter(APPID_PARAM, BuildConfig.THEMOVIEDB_API_KEY)
+                    .build();
+
+            URL url = new URL(buildUrl.toString());
 
             // create the request to themoviedb, and open connection
             urlConnection = (HttpURLConnection) url.openConnection();

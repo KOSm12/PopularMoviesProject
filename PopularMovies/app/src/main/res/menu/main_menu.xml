@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sort_by_average"
+        android:title="@string/sort_by_average"
+        android:showAsAction="never"
+        android:orderInCategory="100"/>
+    <item
+        android:id="@+id/sort_by_popularity"
+        android:title="@string/sort_by_popularity"
+        android:showAsAction="never"
+        android:orderInCategory="101"
+        android:visible="false"/>
+    <item
+        android:id="@+id/setting_menu"
+        android:title="@string/setting_menu"
+        android:showAsAction="never"
+        android:orderInCategory="102" />
+
+</menu>

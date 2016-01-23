@@ -22,7 +22,7 @@ public class PlaceholderFragment extends Fragment {
         listMovies.setAdapter(new ImageAdapter(getActivity()));
 
         FetchMovieTask movieTask = new FetchMovieTask();
-        movieTask.execute();
+        movieTask.execute("popularity.desc");  //vote_average
 
         return view;
     }
