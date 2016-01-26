@@ -1,12 +1,10 @@
 package com.odessite.kos.popularmovies;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    boolean clickSortButton = false;
+    //boolean clickSortButton = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
@@ -32,13 +30,11 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.sort_by_average){
             clickSortButton = true;
             invalidateOptionsMenu() ;
-            FetchMovieTask movieTask = new FetchMovieTask();
-            movieTask.execute("vote_average.desc");  // vote_average.desc  popularity.desc
+            updateMovies("vote_average.desc");
         } else if (id == R.id.sort_by_popularity){
             clickSortButton = true;
             invalidateOptionsMenu() ;
-            FetchMovieTask movieTask = new FetchMovieTask();
-            movieTask.execute("popularity.desc");  // vote_average.desc  popularity.desc
+            updateMovies("popularity.desc");
         }
 
         return super.onOptionsItemSelected(item);
@@ -59,4 +55,9 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onPrepareOptionsMenu(menu);
     }
+
+    private void updateMovies(String sort){
+        //FetchMovieTask movieTask = new FetchMovieTask();
+        //movieTask.execute(sort);  // vote_average.desc  popularity.desc
+    }*/
 }
