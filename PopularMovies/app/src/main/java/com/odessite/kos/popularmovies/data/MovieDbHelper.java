@@ -20,10 +20,11 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 " (" + MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MovieEntry.COLUMN_POSTER + " TEXT, " +
                 MovieEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
-                MovieEntry.COLUMN_DATE + " INTEGER NOT NULL, " +
+                MovieEntry.COLUMN_DATE + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_POPULARITY + " REAL, " +
                 MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_VIDEO + " TEXT, " +
-                MovieEntry.COLUMN_AVERAGE + " INTEGER NOT NULL);";
+                MovieEntry.COLUMN_AVERAGE + " REAL NOT NULL);";
 
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
      }

@@ -25,15 +25,21 @@ public class TestUtilities extends AndroidTestCase {
     }
 
     static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
+        String strValueCurs;
         Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();
         for (Map.Entry<String, Object> entry : valueSet) {
             String columnName = entry.getKey();
             int idx = valueCursor.getColumnIndex(columnName);
             assertFalse("Column '" + columnName + "' not found. " + error, idx == -1);
             String expectedValue = entry.getValue().toString();
+            // This if using for get double data from the DB
+            if (columnName.equals(MovieEntry.COLUMN_POPULARITY)){
+                double douValueCurs = valueCursor.getDouble(idx);
+                strValueCurs = String.valueOf(douValueCurs);
+            } else {strValueCurs = valueCursor.getString(idx);}
             assertEquals("Value '" + entry.getValue().toString() +
                     "' did not match the expected value '" +
-                    expectedValue + "'. " + error, expectedValue, valueCursor.getString(idx));
+                    expectedValue + "'. " + error, expectedValue, strValueCurs);
         }
     }
 
@@ -43,6 +49,7 @@ public class TestUtilities extends AndroidTestCase {
         movieValues.put(MovieEntry.COLUMN_POSTER, "/yIVnNriiyl522hk3LFLJrrMovhP.jpg");
         movieValues.put(MovieEntry.COLUMN_OVERVIEW, "The true story of Whitey Bulger");
         movieValues.put(MovieEntry.COLUMN_DATE, "2015-09-18");
+        movieValues.put(MovieEntry.COLUMN_POPULARITY, 88.551849);
         movieValues.put(MovieEntry.COLUMN_TITLE, "Black Mass");
         movieValues.put(MovieEntry.COLUMN_VIDEO, "");
         movieValues.put(MovieEntry.COLUMN_AVERAGE, 5.98);

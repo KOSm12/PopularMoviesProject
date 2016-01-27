@@ -55,6 +55,7 @@ public class TestDb extends AndroidTestCase {
         movieColumnsHasSet.add(MovieContract.MovieEntry.COLUMN_POSTER);
         movieColumnsHasSet.add(MovieContract.MovieEntry.COLUMN_OVERVIEW);
         movieColumnsHasSet.add(MovieContract.MovieEntry.COLUMN_DATE);
+        movieColumnsHasSet.add(MovieContract.MovieEntry.COLUMN_POPULARITY);
         movieColumnsHasSet.add(MovieContract.MovieEntry.COLUMN_TITLE);
         movieColumnsHasSet.add(MovieContract.MovieEntry.COLUMN_VIDEO);
         movieColumnsHasSet.add(MovieContract.MovieEntry.COLUMN_AVERAGE);
@@ -106,7 +107,7 @@ public class TestDb extends AndroidTestCase {
                 c, testValues);
 
         // Move the cursor to demonstrate that there is only one record in the database
-        assertFalse( "Error: More than one record returned from location query",
+        assertFalse("Error: More than one record returned from location query",
                 c.moveToNext());
 
         // close Cursor and Database
