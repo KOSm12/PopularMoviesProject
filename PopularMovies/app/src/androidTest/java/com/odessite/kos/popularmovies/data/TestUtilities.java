@@ -1,8 +1,10 @@
 package com.odessite.kos.popularmovies.data;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -35,7 +37,7 @@ public class TestUtilities extends AndroidTestCase {
         }
     }
 
-    static ContentValues createMovieValues(long locationRowId) {
+    static ContentValues createBlackMassMovieValues() {
         ContentValues movieValues = new ContentValues();
 
         movieValues.put(MovieEntry.COLUMN_POSTER, "/yIVnNriiyl522hk3LFLJrrMovhP.jpg");
@@ -45,6 +47,21 @@ public class TestUtilities extends AndroidTestCase {
         movieValues.put(MovieEntry.COLUMN_VIDEO, "");
         movieValues.put(MovieEntry.COLUMN_AVERAGE, 5.98);
         return movieValues;
+    }
+
+    static long insertBlackMassMovieValues(Context context){
+        // insert test records into the database
+        MovieDbHelper dbHelper = new MovieDbHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues testValues = TestUtilities.createBlackMassMovieValues();
+
+        long movieRowId;
+        movieRowId = db.insert(MovieEntry.TABLE_NAME, null, testValues);
+
+        // Verify we got a row back
+        assertTrue("Error: Failure to insert North Pole Location Values", movieRowId != -1);
+
+        return movieRowId;
     }
 
     static class TestContentObserver extends ContentObserver {

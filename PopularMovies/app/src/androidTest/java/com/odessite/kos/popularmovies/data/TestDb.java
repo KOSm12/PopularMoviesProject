@@ -1,5 +1,6 @@
 package com.odessite.kos.popularmovies.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
@@ -68,6 +69,47 @@ public class TestDb extends AndroidTestCase {
         // entry columns
         assertTrue("Error: The database doesn't contain all of the required movie entry columns",
                 movieColumnsHasSet.isEmpty());
+        c.close();
+        db.close();
+    }
+
+    public void testMovieTable(){
+        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues testValues = TestUtilities.createBlackMassMovieValues();
+        long movieRowId;
+        movieRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME,
+                null, testValues);
+
+        // verify we got a row back
+        assertTrue("Error: Failure to insert Black Mass Values", movieRowId != -1);
+
+        Cursor c = db.query(MovieContract.MovieEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        // Move the cursor to a valid database row and check to see if we got any records back
+        // from the query
+
+        assertTrue("Error: No Records returned from movie query", c.moveToFirst());
+
+        // Fifth Step: Validate data in resulting Cursor with the original ContentValues
+        // (you can use the validateCurrentRecord function in TestUtilities to validate the
+        // query if you like)
+
+        TestUtilities.validateCurrentRecord("Error: Movie Query Validation Failed",
+                c, testValues);
+
+        // Move the cursor to demonstrate that there is only one record in the database
+        assertFalse( "Error: More than one record returned from location query",
+                c.moveToNext());
+
+        // close Cursor and Database
         c.close();
         db.close();
     }
