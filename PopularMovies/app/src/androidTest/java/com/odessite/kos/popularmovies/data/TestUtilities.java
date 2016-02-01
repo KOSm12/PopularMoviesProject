@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class TestUtilities extends AndroidTestCase {
+    static final String TEST_STRING = "1";
+    static final double TEST_POPULARITY = 88.551849;
 
     static void validateCursor(String error, Cursor valueCursor, ContentValues expectedValues) {
         assertTrue("Empty cursor returned. " + error, valueCursor.moveToFirst());
@@ -49,10 +51,12 @@ public class TestUtilities extends AndroidTestCase {
         movieValues.put(MovieEntry.COLUMN_POSTER, "/yIVnNriiyl522hk3LFLJrrMovhP.jpg");
         movieValues.put(MovieEntry.COLUMN_OVERVIEW, "The true story of Whitey Bulger");
         movieValues.put(MovieEntry.COLUMN_DATE, "2015-09-18");
-        movieValues.put(MovieEntry.COLUMN_POPULARITY, 88.551849);
+        movieValues.put(MovieEntry.COLUMN_ID, 281957);
+        movieValues.put(MovieEntry.COLUMN_POPULARITY, TEST_POPULARITY);
         movieValues.put(MovieEntry.COLUMN_TITLE, "Black Mass");
         movieValues.put(MovieEntry.COLUMN_VIDEO, "");
         movieValues.put(MovieEntry.COLUMN_AVERAGE, 5.98);
+        movieValues.put(MovieEntry.COLUMN_PAGE, TEST_STRING);
         return movieValues;
     }
 

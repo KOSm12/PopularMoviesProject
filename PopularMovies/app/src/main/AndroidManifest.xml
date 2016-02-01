@@ -19,6 +19,10 @@
         </activity>
         <activity android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"/>
+
+        <provider
+            android:authorities="com.odessite.kos.popularmovies.app"
+            android:name=".data.MoviesProvider" />
     </application>
 
 </manifest>

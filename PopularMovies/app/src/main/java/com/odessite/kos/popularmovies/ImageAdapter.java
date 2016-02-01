@@ -14,11 +14,14 @@ import java.util.List;
 
 public class ImageAdapter extends BaseAdapter{
     private Context mContext;
-    public List<String> urls = new ArrayList<String>();
+    private List<String> urls = new ArrayList<String>();
     public static final String LOG_TAG = ImageAdapter.class.getSimpleName();
 
-    public ImageAdapter(Context mContext, List<String> urls) {
+    public ImageAdapter(Context mContext) {
         this.mContext = mContext;
+    }
+
+    public void setUrls(List<String> urls) {
         this.urls = urls;
     }
 
@@ -49,7 +52,7 @@ public class ImageAdapter extends BaseAdapter{
             imageView = (ImageView) convertView;
         }
         String url = (String) getItem(position);
-        Picasso.with(mContext).load(url).into(imageView);
+        Picasso.with(mContext).load(url).placeholder(R.drawable.sample).into(imageView);
         return imageView;
     }
 
