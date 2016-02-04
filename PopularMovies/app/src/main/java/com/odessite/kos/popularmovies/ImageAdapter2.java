@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -22,18 +21,19 @@ public class ImageAdapter2 extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        ImageView imageView = new ImageView(context);
-        imageView.setLayoutParams(new GridView.LayoutParams(285, 364));
+        SquaredImageView imageView = new SquaredImageView(context);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+       /* imageView.setLayoutParams(new GridView.LayoutParams(285, 364));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setPadding(1, 1, 1, 1);
+        imageView.setPadding(1, 1, 1, 1);*/
         bindView(imageView, context, cursor);
         return imageView;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ImageView imagePoster = (ImageView) view;
+        SquaredImageView imagePoster = (SquaredImageView) view;
         url = BASE + cursor.getString(PlaceholderFragment.COL_MOVIE_POSTER);
-        Picasso.with(context).load(url).placeholder(R.drawable.sample).into(imagePoster);
+        Picasso.with(context).load(url).error(R.drawable.sample).into(imagePoster);
     }
 }

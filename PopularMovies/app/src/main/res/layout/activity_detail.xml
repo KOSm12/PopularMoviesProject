@@ -30,47 +30,58 @@
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/sample"
                 android:id="@+id/posterImageView"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"
             android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:text="Release date:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/release_date_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp" />
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Vote average:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/average_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/favorite_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/description_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:id="@+id/description_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
+
 
 
 </LinearLayout>

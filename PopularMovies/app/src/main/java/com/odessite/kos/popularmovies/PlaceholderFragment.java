@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.odessite.kos.popularmovies.data.MovieContract;
+import com.odessite.kos.popularmovies.data.MovieContract.MovieEntry;
 
 public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cursor> {
     public static final int MOVIE_LOADER_ID = 1;
@@ -28,17 +29,17 @@ public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cur
     private String sortOrder;
 
     private static final String[] MOVIE_COLUMNS = {
-        MovieContract.MovieEntry.TABLE_NAME + "." +
-        MovieContract.MovieEntry._ID,
-        MovieContract.MovieEntry.COLUMN_POSTER,
-        MovieContract.MovieEntry.COLUMN_OVERVIEW,
-        MovieContract.MovieEntry.COLUMN_DATE,
-        MovieContract.MovieEntry.COLUMN_ID,
-        MovieContract.MovieEntry.COLUMN_POPULARITY,
-        MovieContract.MovieEntry.COLUMN_TITLE,
-        MovieContract.MovieEntry.COLUMN_VIDEO,
-        MovieContract.MovieEntry.COLUMN_AVERAGE,
-        MovieContract.MovieEntry.COLUMN_PAGE
+        MovieEntry.TABLE_NAME + "." +
+        MovieEntry._ID,
+        MovieEntry.COLUMN_POSTER,
+        MovieEntry.COLUMN_OVERVIEW,
+        MovieEntry.COLUMN_DATE,
+        MovieEntry.COLUMN_ID,
+        MovieEntry.COLUMN_POPULARITY,
+        MovieEntry.COLUMN_TITLE,
+        MovieEntry.COLUMN_VIDEO,
+        MovieEntry.COLUMN_AVERAGE,
+        MovieEntry.COLUMN_PAGE
     };
 
     static final int COL_MOVIE_ID_DATA = 0;
