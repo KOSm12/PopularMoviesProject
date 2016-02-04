@@ -17,8 +17,6 @@ public class MoviesProvider extends ContentProvider {
 
     static final int MOVIES = 100;
     static final int MOVIES_WITH_PAGE = 101;
-    static final int MOVIES_WITH_PAGE_AND_SORT_BY_POPULARITY = 102;
-    static final int MOVIES_WITH_PAGE_AND_SORT_BY_AVERAGE = 103;
     static final int MOVIE_WITH_PAGE_AND_ID = 104;
 
     private static final SQLiteQueryBuilder sMoviesByPageQueryBuilder;
@@ -37,39 +35,20 @@ public class MoviesProvider extends ContentProvider {
 
     //page = ? and sort_by_popularity <= ?
     public static final String sMoviePageAndSortPopularitySelection =
-            MovieContract.MovieEntry.COLUMN_PAGE + " = ? AND " +
-            MovieContract.MovieEntry.COLUMN_POPULARITY + " <= ? ";
-
+            MovieContract.MovieEntry.COLUMN_PAGE + " = ?";
     // page = ? and sort_by_average <= ?
     public static final String sMoviePageAndSortByAverageSelection =
-            MovieContract.MovieEntry.COLUMN_PAGE + " = ? " +
-            MovieContract.MovieEntry.COLUMN_AVERAGE + " <= ? ";
+            MovieContract.MovieEntry.COLUMN_PAGE + " = ?";
 
     public static final String sMoviePageAndIdSelection =
             MovieContract.MovieEntry.COLUMN_PAGE + " = ? AND " +
             MovieContract.MovieEntry.COLUMN_ID + " = ? ";
 
-    private Cursor getMoviesByPagePopularity(Uri uri, String[] projection, String sortOrder){
+    private Cursor getMoviesByPage(Uri uri, String[] projection, String sortOrder){
         String moviesPage = MovieContract.MovieEntry.getMoviesPageFromUri(uri);
-        String sortType = null;
-        String selectionColumns = null;
-        if (sortOrder.equals(MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC")){
-            sortType = MovieContract.MovieEntry.getStartPopularityFromUri(uri);
-            selectionColumns = sMoviePageAndSortPopularitySelection;
-        } else if (sortOrder.equals(MovieContract.MovieEntry.COLUMN_AVERAGE + " DESC")) {
-            sortType = MovieContract.MovieEntry.getStartAverageFromUri(uri);
-            selectionColumns = sMoviePageAndSortByAverageSelection;
-        }
 
-        String[] selectionArg;
-        String selection;
-        if (sortType != null){
-            selection = selectionColumns;
-            selectionArg = new String[]{moviesPage, sortType};
-        } else {
-            selection = sMoviePageSelection;
-            selectionArg = new String[]{moviesPage};
-        }
+        String[] selectionArg = new String[]{moviesPage};
+        String selection = sMoviePageSelection;
 
         return sMoviesByPageQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
@@ -108,7 +87,7 @@ public class MoviesProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)){
             // "movies/*"
             case MOVIES_WITH_PAGE:
-                retCursor = getMoviesByPagePopularity(uri, projection, sortOrder);
+                retCursor = getMoviesByPage(uri, projection, sortOrder);
                 break;
             // "movie/*/#"
             case MOVIE_WITH_PAGE_AND_ID:

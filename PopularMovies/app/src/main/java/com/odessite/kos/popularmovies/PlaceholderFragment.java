@@ -1,8 +1,13 @@
 package com.odessite.kos.popularmovies;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,11 +17,40 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-public class PlaceholderFragment extends Fragment {
+import com.odessite.kos.popularmovies.data.MovieContract;
+
+public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cursor> {
+    public static final int MOVIE_LOADER_ID = 1;
     public static final String LOG_TAG = PlaceholderFragment.class.getSimpleName();
-    GridView listMovies;
-    boolean clickSortButton = false;
-    private ImageAdapter imageAdapter;
+    private boolean clickSortButton = false;
+    private GridView listMovies;
+    private ImageAdapter2 imageAdapter;
+    private String sortOrder;
+
+    private static final String[] MOVIE_COLUMNS = {
+        MovieContract.MovieEntry.TABLE_NAME + "." +
+        MovieContract.MovieEntry._ID,
+        MovieContract.MovieEntry.COLUMN_POSTER,
+        MovieContract.MovieEntry.COLUMN_OVERVIEW,
+        MovieContract.MovieEntry.COLUMN_DATE,
+        MovieContract.MovieEntry.COLUMN_ID,
+        MovieContract.MovieEntry.COLUMN_POPULARITY,
+        MovieContract.MovieEntry.COLUMN_TITLE,
+        MovieContract.MovieEntry.COLUMN_VIDEO,
+        MovieContract.MovieEntry.COLUMN_AVERAGE,
+        MovieContract.MovieEntry.COLUMN_PAGE
+    };
+
+    static final int COL_MOVIE_ID_DATA = 0;
+    static final int COL_MOVIE_POSTER = 1;
+    static final int COL_MOVIE_OVERVIEW = 2;
+    static final int COL_MOVIE_DATE = 3;
+    static final int COL_MOVIE_ID = 4;
+    static final int COL_MOVIE_POPULARITY = 5;
+    static final int COL_MOVIE_TITLE = 6;
+    static final int COL_MOVIE_VIDEO = 7;
+    static final int COL_MOVIE_AVERAGE = 8;
+    static final int COL_MOVIE_PAGE = 9;
 
     public PlaceholderFragment() {
         setHasOptionsMenu(true);
@@ -25,8 +59,13 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        imageAdapter = new ImageAdapter(getActivity());
-        updateMovies("");
+        // Get movies from themoviedb.com
+        updateMovies();
+        // Sort order: Desc, by average default
+        sortOrder = MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC";
+        //imageAdapter = new ImageAdapter(getActivity(), null);
+        imageAdapter = new ImageAdapter2(getActivity(), null, 0);
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -35,10 +74,14 @@ public class PlaceholderFragment extends Fragment {
         listMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String posterDetails = (String) imageAdapter.getItem(position);
-                Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, posterDetails);
-                startActivity(detailIntent);
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                if (null != cursor){
+                    String page = cursor.getString(COL_MOVIE_PAGE);
+                    int movieId = cursor.getInt(COL_MOVIE_ID);
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .setData(MovieContract.MovieEntry.buildMoviePageWithId(page, movieId));
+                    startActivity(intent);
+                }
             }
         });
 
@@ -55,10 +98,12 @@ public class PlaceholderFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.sort_by_average){
             clickSortButton = true;
-            updateMovies("vote_average.desc");
+            sortOrder = MovieContract.MovieEntry.COLUMN_AVERAGE + " DESC";
+            getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
         } else if (id == R.id.sort_by_popularity){
             clickSortButton = true;
-            updateMovies("popularity.desc");
+            sortOrder = MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC";
+            getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -80,8 +125,41 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
-    private void updateMovies(String sort){
-        FetchMovieTask movieTask = new FetchMovieTask(getActivity(), imageAdapter);
-        movieTask.execute(getString(R.string.sort_by_popularity));  // vote_average.desc  popularity.desc
+    private void updateMovies(){
+        FetchMovieTask movieTask = new FetchMovieTask(getActivity());
+        movieTask.execute(1);  // vote_average.desc  popularity.desc
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // Prepare the loader.  Either re-connect with an existing one,
+        // or start a new one.
+        getLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri uri = MovieContract.MovieEntry.buildMoviesPage("1");
+
+        return new CursorLoader(getActivity(),
+                uri,
+                MOVIE_COLUMNS,
+                null,
+                null,
+                sortOrder);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        /*imageAdapter.setUrls(data);
+        imageAdapter.notifyDataSetInvalidated();*/
+        imageAdapter.swapCursor(data);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        imageAdapter.swapCursor(null);
     }
 }

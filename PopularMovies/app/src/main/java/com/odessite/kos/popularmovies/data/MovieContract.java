@@ -5,8 +5,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.odessite.kos.popularmovies.R;
-
 public class MovieContract {
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
@@ -53,9 +51,9 @@ public class MovieContract {
         }
 
         public static Uri buildMoviesPageWithStartSort(String page, String sort){
-            if (sort.equals(R.string.sort_by_popularity)){
+            if (sort.equals(COLUMN_POPULARITY + " DESC")){
                 return CONTENT_URI.buildUpon().appendPath(page).appendQueryParameter(COLUMN_POPULARITY, sort).build();
-            } else  if (sort.equals(R.string.sort_by_average)){
+            } else  if (sort.equals(COLUMN_AVERAGE + " DESC")){
                 return CONTENT_URI.buildUpon().appendPath(page).appendQueryParameter(COLUMN_AVERAGE, sort).build();
             }
             return null;
@@ -70,30 +68,11 @@ public class MovieContract {
         }
 
         public static String getMovieIdFromUri(Uri uri){
-            return uri.getPathSegments().get(4);
+            return uri.getPathSegments().get(2);
         }
 
         public static String getMoviesPageFromUri(Uri uri){
-            int number = uri.getPathSegments().size();
-            return uri.getPathSegments().get(number - 1);
-        }
-
-        public static String getStartPopularityFromUri(Uri uri){
-            String popularityString = uri.getQueryParameter(COLUMN_POPULARITY);
-            if (null != popularityString && popularityString.length() > 0){
-                return popularityString;
-            } else {
-                return null;
-            }
-        }
-
-        public static String getStartAverageFromUri(Uri uri){
-            String averageString = uri.getQueryParameter(COLUMN_AVERAGE);
-            if (null != averageString && averageString.length() > 0){
-                return averageString;
-            } else {
-                return null;
-            }
+            return uri.getPathSegments().get(1);
         }
     }
 }

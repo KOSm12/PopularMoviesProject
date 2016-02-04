@@ -2,8 +2,6 @@ package com.odessite.kos.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -21,23 +19,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
-public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
-    static final String BASE = "http://image.tmdb.org/t/p/w185/";
+public class FetchMovieTask extends AsyncTask<Integer, Void, Void> {
+
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
     private final Context mContext;
-    private ImageAdapter imageAdapter;
-    private List<String> urls = new ArrayList<String>();
 
-    public FetchMovieTask(Context mContext, ImageAdapter imageAdapter) {
+    public FetchMovieTask(Context mContext) {
         this.mContext = mContext;
-        this.imageAdapter = imageAdapter;
     }
 
-    private String[] getMoviesFromJson(String moviesDbDiscover, int page) throws JSONException{
+    private void getMoviesFromJson(String moviesDbDiscover, int page) throws JSONException{
         // These are the names of the JSON objects that need to be extracted.
         final String OWM_LIST = "results";
         final String OWM_POSTER = "poster_path";
@@ -88,50 +81,24 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
 
                 cVector.add(movieValues);
             }
+            int inserted = 0;
             if (cVector.size() > 0){
                 int deleteAll = mContext.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, null, null);
                 // call bulkInsert to add movieEntries to database
                 ContentValues[] movieValues = new ContentValues[cVector.size()];
                 cVector.toArray(movieValues);
-                mContext.getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
+                inserted = mContext.getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
+                Log.v(LOG_TAG, "Inserted" + inserted);
             }
-
-            String sortOrder = MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC";
-            Uri moviesForPageUri = MovieContract.MovieEntry.buildMoviesPage("1");
-            Cursor cur = mContext.getContentResolver().query(moviesForPageUri, null,
-            null, null, sortOrder);
-
-            cVector = new Vector<ContentValues>(cur.getCount());
-            if (cur.moveToFirst()){
-                do {
-                    ContentValues cv = new ContentValues();
-                    DatabaseUtils.cursorRowToContentValues(cur, cv);
-                    cVector.add(cv);
-                }while (cur.moveToNext());
-            }
-
-            Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVector.size() + " Inserted");
-            String[] resultStr = convertContentValuesToUXFormat(cVector);
-            return resultStr;
 
         } catch (JSONException e){
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-        return null;
-    }
-
-    private String[] convertContentValuesToUXFormat(Vector<ContentValues> cVector) {
-        String[] resultStr = new String[cVector.size()];
-        for (int i = 0; i < cVector.size(); i++) {
-            ContentValues movieValues = cVector.elementAt(i);
-            resultStr[i] = BASE + movieValues.getAsString(MovieContract.MovieEntry.COLUMN_POSTER);
-        }
-        return resultStr;
     }
 
     @Override
-    protected String[] doInBackground(String... params) {
+    protected Void doInBackground(Integer... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         int page = 1;
@@ -142,7 +109,6 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
             // Construct the URL for the themoviedb query
             final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
             final String PAGE_PARAM = "page";
-            //final String SORT_PARAM = "sort_by";
             final String APPID_PARAM = "api_key";
 
             Uri buildUrl = Uri.parse(BASE_URL).buildUpon()
@@ -175,11 +141,15 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
             }
 
             moviesDbDiscover = builder.toString();
+            getMoviesFromJson(moviesDbDiscover, page);
 
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error URL ", e);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error Input ", e);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
         } finally {
             if (urlConnection != null){
                 urlConnection.disconnect();
@@ -192,24 +162,6 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
                 }
             }
         }
-        try {
-            return getMoviesFromJson(moviesDbDiscover, page);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(String[] results) {
-        if (null != results){
-            for (String moviePoster: results
-                 ) {
-                urls.add(moviePoster);
-            }
-            imageAdapter.setUrls(urls);
-            imageAdapter.notifyDataSetInvalidated();
-        }
     }
 }

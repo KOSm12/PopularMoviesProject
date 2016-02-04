@@ -169,8 +169,8 @@ public class TestProvider extends AndroidTestCase {
 
         // Get the Movies data with a sort popularity
         movieCursor = mContext.getContentResolver().query(
-                MovieContract.MovieEntry.buildMoviesPageWithStartSort(
-                        TestUtilities.TEST_STRING, Double.toString(TestUtilities.TEST_POPULARITY)),
+                MovieContract.MovieEntry.buildMoviesPage(
+                        TestUtilities.TEST_STRING),
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
