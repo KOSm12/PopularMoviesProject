@@ -19,6 +19,7 @@ import android.widget.GridView;
 
 import com.odessite.kos.popularmovies.data.MovieContract;
 import com.odessite.kos.popularmovies.data.MovieContract.MovieEntry;
+import com.odessite.kos.popularmovies.services.MoviesService;
 
 public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cursor> {
     public static final int MOVIE_LOADER_ID = 1;
@@ -135,9 +136,12 @@ public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cur
     }
 
     private void updateMovies(String lang){
-        FetchMovieTask movieTask = new FetchMovieTask(getActivity());
+        /*FetchMovieTask movieTask = new FetchMovieTask(getActivity());
         String page = "1";
-        movieTask.execute(page, lang);  // vote_average.desc  popularity.desc
+        movieTask.execute(page, lang);  // vote_average.desc  popularity.desc*/
+        Intent serviceIntent = new Intent(getActivity(), MoviesService.class);
+        serviceIntent.putExtra(MoviesService.LANGUAGE_QUERY_EXTRA, Utility.getPreferredLang(getActivity()));
+        getActivity().startService(serviceIntent);
     }
 
     @Override

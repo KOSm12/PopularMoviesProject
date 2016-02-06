@@ -38,6 +38,8 @@
         <provider
             android:name=".data.MoviesProvider"
             android:authorities="com.odessite.kos.popularmovies.app" />
+
+        <service android:name="com.odessite.kos.popularmovies.services.MoviesService" />
     </application>
 
 </manifest>
