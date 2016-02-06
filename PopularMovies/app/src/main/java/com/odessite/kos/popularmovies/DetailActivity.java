@@ -92,6 +92,16 @@ public class DetailActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.setting_menu){
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Intent intent = getIntent();
         if (null == intent){return null;}

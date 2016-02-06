@@ -8,4 +8,9 @@
         app:actionProviderClass=
             "android.support.v7.widget.ShareActionProvider" />
 
+    <item
+        android:id="@+id/setting_menu"
+        android:title="@string/title_settings_menu"
+        android:showAsAction="never" />
+
 </menu>

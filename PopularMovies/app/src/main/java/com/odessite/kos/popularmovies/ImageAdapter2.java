@@ -23,9 +23,6 @@ public class ImageAdapter2 extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         SquaredImageView imageView = new SquaredImageView(context);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-       /* imageView.setLayoutParams(new GridView.LayoutParams(285, 364));
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setPadding(1, 1, 1, 1);*/
         bindView(imageView, context, cursor);
         return imageView;
     }

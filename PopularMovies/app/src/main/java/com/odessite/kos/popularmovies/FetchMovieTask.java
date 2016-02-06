@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
 
-public class FetchMovieTask extends AsyncTask<Integer, Void, Void> {
+public class FetchMovieTask extends AsyncTask<String, Void, Void> {
 
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
     private final Context mContext;
@@ -98,10 +98,11 @@ public class FetchMovieTask extends AsyncTask<Integer, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Integer... params) {
+    protected Void doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         int page = 1;
+        String lang = params[1];
 
         String moviesDbDiscover = null;
 
@@ -110,9 +111,11 @@ public class FetchMovieTask extends AsyncTask<Integer, Void, Void> {
             final String BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
             final String PAGE_PARAM = "page";
             final String APPID_PARAM = "api_key";
+            final String LANG_PARAM = "language";
 
             Uri buildUrl = Uri.parse(BASE_URL).buildUpon()
                     .appendQueryParameter(PAGE_PARAM, Integer.toString(page))
+                    .appendQueryParameter(LANG_PARAM, lang)
                     .appendQueryParameter(APPID_PARAM, BuildConfig.THEMOVIEDB_API_KEY)
                     .build();
 

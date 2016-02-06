@@ -27,6 +27,7 @@ public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cur
     private GridView listMovies;
     private ImageAdapter2 imageAdapter;
     private String sortOrder;
+    private String startLangSetting;
 
     private static final String[] MOVIE_COLUMNS = {
         MovieEntry.TABLE_NAME + "." +
@@ -60,8 +61,10 @@ public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cur
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        startLangSetting = Utility.getPreferredLang(getActivity());
+
         // Get movies from themoviedb.com
-        updateMovies();
+        updateMovies(startLangSetting);
         // Sort order: Desc, by average default
         sortOrder = MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC";
         //imageAdapter = new ImageAdapter(getActivity(), null);
@@ -101,10 +104,15 @@ public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cur
             clickSortButton = true;
             sortOrder = MovieContract.MovieEntry.COLUMN_AVERAGE + " DESC";
             getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+            return true;
         } else if (id == R.id.sort_by_popularity){
             clickSortButton = true;
             sortOrder = MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC";
             getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+            return true;
+        } else if (id == R.id.setting_menu){
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -126,9 +134,10 @@ public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cur
         }
     }
 
-    private void updateMovies(){
+    private void updateMovies(String lang){
         FetchMovieTask movieTask = new FetchMovieTask(getActivity());
-        movieTask.execute(1);  // vote_average.desc  popularity.desc
+        String page = "1";
+        movieTask.execute(page, lang);  // vote_average.desc  popularity.desc
     }
 
     @Override
@@ -137,6 +146,15 @@ public class PlaceholderFragment extends Fragment implements LoaderCallbacks<Cur
         // or start a new one.
         getLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String currentLang = Utility.getPreferredLang(getActivity());
+        if (!currentLang.equals(startLangSetting)){
+            updateMovies(currentLang);
+        }
     }
 
     @Override

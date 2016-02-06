@@ -6,7 +6,16 @@
     <string name="sort_by_popularity">Sort by popularity</string>
     <string name="sort_by_average">Sort by average</string>
     <string name="setting_menu">Settings</string>
+    <string name="title_settings_menu">Settings</string>
     <string name="share_string">Share</string>
 
     <string name="format_average"><xliff:g id="average">%1s</xliff:g>/10</string>
+
+    <!--Setting strings-->
+    <string name="pref_lang_label">Language</string>
+    <string name="pref_ru_label">Russian</string>
+    <string name="pref_en_label">English</string>
+    <string name="pref_lang_key" translatable="false">language</string>
+    <string name="pref_ru_value" translatable="false">ru</string>
+    <string name="pref_en_value" translatable="false">en</string>
 </resources>
